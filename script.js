@@ -9,9 +9,9 @@ let timerInterval;
 let secondsElapsed = 0;
 
 // Load audio files for feedback sounds
-const correctSound = new Audio('./sounds/correct.mp3');
-const incorrectSound = new Audio('./sounds/incorrect.mp3');
-const winSound = new Audio('./sounds/yay.mp3');
+const correctSound = new Audio('.assets/sounds/correct.mp3');
+const incorrectSound = new Audio('.assets/sounds/incorrect.mp3');
+const winSound = new Audio('.assets/sounds/yay.mp3');
 
 // Get DOM elements for later use
 const victoryOverlay = document.getElementById('victory-overlay');
