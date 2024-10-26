@@ -11,9 +11,9 @@ body {
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(3, 100px); /* 3 columns: for headers + 2 grid columns */
-    grid-template-rows: repeat(3, 100px); /* 3 rows: for headers + 2 grid rows */
-    gap: 5px;
+    grid-template-columns: 150px 150px 150px; /* 3 columns */
+    grid-template-rows: 150px 150px 150px; /* 3 rows */
+    gap: 10px;
     margin-bottom: 20px;
 }
 
@@ -25,34 +25,36 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer; /* Make cells clickable */
-    font-size: 14px;
+    cursor: pointer;
+    font-size: 16px;
+    height: 150px;
+    width: 150px;
 }
 
 .header-cell {
-    background-color: #dfe6e9; /* Light gray background for headers */
+    background-color: #dfe6e9;
     font-weight: bold;
-    cursor: default; /* Header cells should not be clickable */
+    cursor: default;
 }
 
 .correct {
-    background-color: #d4edda; /* Light green for correct answers */
+    background-color: #d4edda;
 }
 
 .incorrect {
-    background-color: #f8d7da; /* Light red for incorrect answers */
+    background-color: #f8d7da;
 }
 
 .empty-cell {
     background-color: transparent;
     border: none;
-    cursor: default; /* No interaction */
+    cursor: default;
 }
 
 .actor-input {
-    width: 80%;
+    width: 90%;
     padding: 5px;
-    font-size: 14px;
+    font-size: 16px;
     text-align: center;
 }
 
@@ -61,7 +63,7 @@ body {
     background-color: #ffffff;
     border: 1px solid #ccc;
     z-index: 100;
-    max-height: 100px;
+    max-height: 150px;
     overflow-y: auto;
     width: 200px;
 }
