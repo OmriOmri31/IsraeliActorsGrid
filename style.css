@@ -58,29 +58,37 @@ h1 {
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    overflow: hidden;
 }
 
 #instruction-content {
     background-color: #fff;
-    padding: 30px;
+    padding: 15px; /* Reduced padding for more space */
     border-radius: 15px;
     text-align: center;
     max-width: 90%;
+    max-height: 80vh; /* Limit the height to 80% of viewport */
+    overflow-y: hidden; /* Disable scrolling */
     color: var(--text-color);
-    font-size: 1.2em;
+    font-size: 0.9em; /* Decreased font size slightly */
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     animation: fadeIn 0.5s ease-in-out;
 }
 
 #instruction-content p {
-    margin-bottom: 20px;
-    line-height: 1.6;
+    margin-bottom: 8px; /* Reduced margin between paragraphs */
+    line-height: 1.4; /* Reduced line height for compact text */
+}
+
+#instruction-content h2 {
+    font-size: 1.2em; /* Adjusted heading size */
+    margin-bottom: 10px;
 }
 
 /* Start Button Styling */
 #start-button {
-    padding: 15px 30px;
-    font-size: 1.2em;
+    padding: 12px 24px;
+    font-size: 1em; /* Slightly smaller font */
     color: #ffffff;
     background-color: var(--primary-color);
     border: none;
@@ -88,6 +96,7 @@ h1 {
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.2s;
+    margin-top: 15px;
 }
 
 #start-button:hover {
@@ -157,7 +166,6 @@ h1 {
 
 /* Cell Styling */
 .cell {
-    position: relative;
     padding: 10px;
     text-align: center;
     border: 2px solid #ddd;
@@ -173,6 +181,7 @@ h1 {
     font-weight: 500;
     color: var(--text-color);
     overflow: hidden;
+    position: relative; /* Added for positioning pseudo-element */
 }
 
 /* Hover Effects for Cells */
@@ -288,7 +297,6 @@ h1 {
     overflow-x: hidden;
 }
 
-/* Suggestion Item Styling */
 .suggestion-item {
     padding: 10px;
     font-size: 1em;
@@ -396,11 +404,43 @@ h1 {
         transform: scale(1);
     }
 }
+
 /* Style for the example image in the instructions */
 .example-image {
-    margin-top: 20px;
+    margin-top: 10px;
     max-width: 100%;
+    width: auto;
     height: auto;
     border: 2px solid var(--primary-color);
     border-radius: 10px;
+    max-height: 45vh; /* Increased image height */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #instruction-content {
+        font-size: 0.85em; /* Further reduction for smaller screens */
+        padding: 10px;
+    }
+
+    #start-button {
+        font-size: 0.9em;
+        padding: 8px 16px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .cell {
+        font-size: 1em;
+    }
+
+    .header-cell {
+        font-size: 1em;
+    }
+
+    .example-image {
+        max-height: 35vh; /* Adjusted image height for smaller screens */
+    }
 }
