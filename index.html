@@ -3,27 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>TV Show Actor Grid Game</title>
+    <!-- Link to the stylesheet -->
     <link rel="stylesheet" href="style.css">
+    <!-- Include Google Fonts for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Meta tag for responsiveness on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-    <div class="container">
-        <h1>משחק רשתות טלוויזיה ושחקנים</h1>
-        <button id="generate-grid">צור רשת חדשה</button>
-        <div id="game-container">
-            <!-- Game grid will be generated here -->
-        </div>
-        <div id="perfect-grid-container">
-            <!-- Perfect grid will be displayed here -->
-        </div>
+<!-- Instruction Overlay displayed at the start of the game -->
+<div id="instruction-overlay">
+    <div id="instruction-content">
+        <p>עליכם למצוא בכל משבצת שחקן/ית ששיחקו בשתי הסדרות שבראש השורה ובצד העמודה</p>
+        <p>עלולה להיות יותר מתשובה אחת נכונה אך קיימת לפחות אחת</p>
+        <p>אותו שחקן/ית יכולים להופיע מספר פעמים בטבלה</p>
+        <p>אל תפחדו לטעות, תמיד אפשר לתקן</p>
+        <p>כאשר תסיימו ותמלאו את כל הריבועים נכון, הזמן ייעצר.</p>
+        <p>!בהצלחה</p>
+        <button id="start-button">התחל</button>
     </div>
+</div>
 
-    <!-- Autocomplete suggestions -->
-    <div id="suggestions" class="suggestions"></div>
+<!-- Main container for the game -->
+<div class="container">
+    <h1>דניאל מו-רשת שחקנים</h1>
+    <div id="timer">00:00</div> <!-- Timer display -->
+    <button id="generate-grid">צור רשת חדשה</button>
+    <div id="game-container">
+        <!-- Game grid will be dynamically generated here -->
+    </div>
+    <div id="perfect-grid-container">
+        <!-- Perfect grid (answers) will be displayed here when needed -->
+    </div>
+</div>
 
-    <!-- Include data and scripts -->
-    <script src="data.js"></script>
-    <script type="module" src="script.js"></script>
+<!-- Include the data and the main script -->
+<script src="data.js"></script>
+<script type="module" src="script.js"></script>
+
+<!-- Autocomplete suggestions (name scroller) -->
+<div id="suggestions" class="suggestions"></div>
+
+<!-- Victory overlay displayed upon game completion -->
+<div id="victory-overlay">
+    <div id="victory-content">
+        <h2>!כל הכבוד</h2>
+        <p>סיימת את המשחק בהצלחה בזמן של <span id="final-time"></span></p>
+        <button id="play-again-button">שחק שוב</button>
+    </div>
+</div>
 
 </body>
 </html>

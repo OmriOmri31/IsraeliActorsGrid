@@ -1,62 +1,114 @@
-// script.js
-
 // Import the precomputed data
 import { validGrids, allActors, intersections } from './data.js';
 
-// Variables to hold game data
 let topShows = [];
 let rightShows = [];
 let currentGrid = {};
 let solvedCells = 0;
+let timerInterval;
+let secondsElapsed = 0;
 
-// Generate a new grid when the page loads
-window.onload = () => {
+// Load audio files for feedback sounds
+const correctSound = new Audio('./sounds/correct.mp3');
+const incorrectSound = new Audio('./sounds/incorrect.mp3');
+const winSound = new Audio('./sounds/yay.mp3');
+
+// Get DOM elements for later use
+const victoryOverlay = document.getElementById('victory-overlay');
+const finalTimeSpan = document.getElementById('final-time');
+const playAgainButton = document.getElementById('play-again-button');
+
+// Event listener for the "התחל" button to start the game and timer
+document.getElementById('start-button').addEventListener('click', () => {
+    document.getElementById('instruction-overlay').style.display = 'none';
+    startTimer();
     loadPrecomputedGrid();
-};
+});
 
-// Event listener for the "Generate New Grid" button
-document.getElementById('generate-grid').addEventListener('click', loadPrecomputedGrid);
+// Event listener for the "צור רשת חדשה" button to generate a new grid and reset the timer
+document.getElementById('generate-grid').addEventListener('click', () => {
+    stopTimer();          // Stop any ongoing timer
+    resetTimerDisplay();   // Reset the timer display to 00:00
+    loadPrecomputedGrid(); // Generate a new grid
+    startTimer();          // Start a new timer
+});
 
+// Event listener for the "שחק שוב" button in the victory overlay
+playAgainButton.addEventListener('click', () => {
+    victoryOverlay.style.display = 'none';
+    stopTimer();
+    resetTimerDisplay();
+    loadPrecomputedGrid();
+    startTimer();
+});
+
+// Function to start the game timer
+function startTimer() {
+    secondsElapsed = 0;
+    document.getElementById('timer').textContent = formatTime(secondsElapsed);
+
+    timerInterval = setInterval(() => {
+        secondsElapsed++;
+        document.getElementById('timer').textContent = formatTime(secondsElapsed);
+    }, 1000);
+}
+
+// Function to stop the game timer
+function stopTimer() {
+    clearInterval(timerInterval);
+}
+
+// Function to reset the timer display
+function resetTimerDisplay() {
+    secondsElapsed = 0;
+    document.getElementById('timer').textContent = "00:00";
+}
+
+// Function to format the time in mm:ss format
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const remainingSeconds = (seconds % 60).toString().padStart(2, '0');
+    return `${minutes}:${remainingSeconds}`;
+}
+
+// Function to load a new random valid grid
 function loadPrecomputedGrid() {
-    // Reset variables
     solvedCells = 0;
-
-    // Clear previous grids
     document.getElementById('game-container').innerHTML = '';
-    document.getElementById('perfect-grid-container').style.display = 'none'; // Hide perfect grid initially
+    document.getElementById('perfect-grid-container').style.display = 'none';
 
-    // Select a random valid grid from precomputed grids
     const randomIndex = Math.floor(Math.random() * validGrids.length);
     currentGrid = validGrids[randomIndex];
     topShows = currentGrid.topShows;
-    rightShows = currentGrid.leftShows; // Treat left shows as right headers
+    rightShows = currentGrid.leftShows;
 
-    // Create the game and perfect grids using this setup
     createGameGrid(currentGrid.gridSetup);
     createPerfectGrid(currentGrid.gridSetup);
 }
 
+// Function to create the game grid dynamically
 function createGameGrid(gridSetup) {
     const gameContainer = document.getElementById('game-container');
     const grid = document.createElement('div');
     grid.className = 'grid';
 
-    // Create the grid layout according to specified cells
-    for (let i = 0; i < 3; i++) { // Rows
-        for (let j = 0; j < 3; j++) { // Columns
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
             const cell = document.createElement('div');
             cell.className = 'cell';
 
+            // Top show headers
             if ((i === 0 && j === 0) || (i === 0 && j === 1)) {
-                // Top row headers for TV Shows at 0,0 and 0,1
                 cell.classList.add('header-cell');
                 cell.textContent = topShows[j];
-            } else if ((i === 1 && j === 2) || (i === 2 && j === 2)) {
-                // Right column headers for TV Shows at 1,2 and 2,2
+            }
+            // Left show headers
+            else if ((i === 1 && j === 2) || (i === 2 && j === 2)) {
                 cell.classList.add('header-cell');
                 cell.textContent = rightShows[i - 1];
-            } else {
-                // Playable cells in the 2x2 area: 1,0; 1,1; 2,0; 2,1
+            }
+            // Interactive cells
+            else {
                 const gridCell = gridSetup[(i - 1) * 2 + j];
                 cell.dataset.top = gridCell.top;
                 cell.dataset.left = gridCell.left;
@@ -70,27 +122,30 @@ function createGameGrid(gridSetup) {
     gameContainer.appendChild(grid);
 }
 
+// Function to create the perfect grid (answers) for reference
 function createPerfectGrid(gridSetup) {
     const perfectContainer = document.getElementById('perfect-grid-container');
+    perfectContainer.innerHTML = ''; // Clear previous content
     const grid = document.createElement('div');
     grid.className = 'grid';
 
-    // Create the grid layout for the solution
-    for (let i = 0; i < 3; i++) { // Rows
-        for (let j = 0; j < 3; j++) { // Columns
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
             const cell = document.createElement('div');
             cell.className = 'cell';
 
+            // Top show headers
             if ((i === 0 && j === 0) || (i === 0 && j === 1)) {
-                // Top row headers for TV Shows at 0,0 and 0,1
                 cell.classList.add('header-cell');
                 cell.textContent = topShows[j];
-            } else if ((i === 1 && j === 2) || (i === 2 && j === 2)) {
-                // Right column headers for TV Shows at 1,2 and 2,2
+            }
+            // Left show headers
+            else if ((i === 1 && j === 2) || (i === 2 && j === 2)) {
                 cell.classList.add('header-cell');
                 cell.textContent = rightShows[i - 1];
-            } else {
-                // Display possible answers for each intersection in the 2x2 area
+            }
+            // Answer cells
+            else {
                 const gridCell = gridSetup[(i - 1) * 2 + j];
                 cell.textContent = gridCell.actors.join(', ');
             }
@@ -102,58 +157,63 @@ function createPerfectGrid(gridSetup) {
     perfectContainer.appendChild(grid);
 }
 
+// Function to handle clicks on interactive cells
 function handleCellClick(event) {
     const cell = event.currentTarget;
-    if (cell.classList.contains('correct')) return; // Prevent further input if already correct
+    if (cell.classList.contains('correct')) return; // Ignore if already correct
 
     const topShow = cell.dataset.top;
-    const rightShow = cell.dataset.left;
-    const key = `${topShow}-${rightShow}`;
+    const leftShow = cell.dataset.left;
 
-    // Create an input field for user interaction
+    // Create input field for the user to enter the actor's name
     const input = document.createElement('input');
     input.type = 'text';
     input.className = 'actor-input';
     input.placeholder = 'Enter Actor Name';
+
     cell.innerHTML = '';
     cell.appendChild(input);
     input.focus();
 
-    // Handle autocomplete and suggestions for all actors
+    // Event listener for input changes to show suggestions
     input.addEventListener('input', () => {
         showSuggestions(input);
     });
 
-    // Handle answer submission
+    // Event listener for pressing Enter key
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             if (input.value.trim().toLowerCase() === "showans") {
-                document.getElementById('perfect-grid-container').style.display = 'block'; // Show perfect grid
+                document.getElementById('perfect-grid-container').style.display = 'block';
             } else {
                 submitAnswer(input, cell);
             }
         }
     });
 
-    // Close suggestions when clicking outside
+    // Close input when clicking outside the cell
     document.addEventListener('click', (e) => {
         if (!cell.contains(e.target)) {
             cell.innerHTML = '';
+            document.getElementById('suggestions').style.display = 'none';
         }
     }, { once: true });
 }
 
+// Function to show autocomplete suggestions
 function showSuggestions(input) {
     const suggestionsDiv = document.getElementById('suggestions');
     suggestionsDiv.innerHTML = '';
-    const query = input.value.trim();
+    const query = input.value.trim().toLowerCase();
 
     if (query.length === 0) {
         suggestionsDiv.style.display = 'none';
         return;
     }
 
-    const matchingActors = allActors.filter(actor => actor.includes(query));
+    // Filter actors that contain the query substring (case-insensitive)
+    const matchingActors = allActors.filter(actor => actor.toLowerCase().includes(query));
+
     matchingActors.forEach(actor => {
         const div = document.createElement('div');
         div.textContent = actor;
@@ -161,14 +221,15 @@ function showSuggestions(input) {
         div.addEventListener('click', () => {
             input.value = actor;
             suggestionsDiv.style.display = 'none';
-            submitAnswer(input, input.parentElement); // Automatically submit
+            submitAnswer(input, input.parentElement);
         });
         suggestionsDiv.appendChild(div);
     });
 
     if (matchingActors.length > 0) {
+        // Position the suggestions div below the input field
         const rect = input.getBoundingClientRect();
-        suggestionsDiv.style.left = `${rect.left}px`;
+        suggestionsDiv.style.left = `${rect.left + window.scrollX}px`;
         suggestionsDiv.style.top = `${rect.bottom + window.scrollY}px`;
         suggestionsDiv.style.display = 'block';
     } else {
@@ -176,30 +237,45 @@ function showSuggestions(input) {
     }
 }
 
+// Function to handle the submission of an answer
 function submitAnswer(input, cell) {
+    const suggestionsDiv = document.getElementById('suggestions');
     const answer = input.value.trim();
     const topShow = cell.dataset.top;
     const leftShow = cell.dataset.left;
     const key = `${topShow}-${leftShow}`;
     const validActors = intersections[key];
 
-    // Clear the suggestions box after a guess
-    document.getElementById('suggestions').style.display = 'none';
+    suggestionsDiv.style.display = 'none';
 
     if (validActors.includes(answer)) {
         cell.classList.remove('incorrect');
         cell.classList.add('correct');
-        cell.textContent = answer; // Display only the answer in bold
+        cell.innerHTML = '';
+        cell.textContent = answer;
+        correctSound.play();
         solvedCells++;
         checkGameCompletion();
     } else {
         cell.classList.add('incorrect');
         cell.classList.remove('correct');
-        cell.textContent = answer; // Display only the answer in bold
+        cell.innerHTML = '';
+        cell.textContent = answer;
+        incorrectSound.play();
     }
 }
+
+// Function to check if the game is completed
 function checkGameCompletion() {
-    if (solvedCells === 4) { // 2x2 grid means 4 correct answers
-        alert('Congratulations! You have completed the game!');
+    if (solvedCells === 4) {
+        winSound.play();
+        stopTimer();
+        showVictoryOverlay();
     }
+}
+
+// Function to display the victory overlay
+function showVictoryOverlay() {
+    finalTimeSpan.textContent = formatTime(secondsElapsed);
+    victoryOverlay.style.display = 'flex';
 }

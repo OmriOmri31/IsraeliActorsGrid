@@ -1,4 +1,16 @@
-/* Reset some basic styles */
+/* CSS Variables for easy theming */
+:root {
+    --primary-color: #4a90e2;
+    --primary-dark: #357abd;
+    --secondary-color: #eef4fc;
+    --background-color: #f0f2f5;
+    --text-color: #333;
+    --correct-color: #28a745;
+    --incorrect-color: #dc3545;
+    --font-family: 'Poppins', Arial, sans-serif;
+}
+
+/* Global Styles */
 * {
     margin: 0;
     padding: 0;
@@ -6,25 +18,124 @@
 }
 
 body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+    color: var(--text-color);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 100vh;
     padding: 20px;
 }
 
+/* Game Title */
 h1 {
-    font-size: 2em;
-    color: #4a90e2;
+    font-size: 2.5em;
+    color: var(--primary-color);
     margin-bottom: 20px;
     text-align: center;
     font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Main Container */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Instruction Overlay Styling */
+#instruction-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.9), rgba(53, 122, 189, 0.9));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+#instruction-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 90%;
+    color: var(--text-color);
+    font-size: 1.2em;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+#instruction-content p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+/* Start Button Styling */
+#start-button {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    color: #ffffff;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+#start-button:hover {
+    background-color: var(--primary-dark);
+    transform: scale(1.05);
+}
+
+#start-button:active {
+    transform: scale(0.95);
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Generate Grid Button Styling */
+#generate-grid {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    color: #ffffff;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+    font-weight: bold;
+}
+
+#generate-grid:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+#generate-grid:active {
+    transform: translateY(1px);
+}
+
+/* Game and Perfect Grid Containers */
 #game-container,
 #perfect-grid-container {
     display: flex;
@@ -33,15 +144,20 @@ h1 {
     margin-bottom: 20px;
 }
 
+/* Grid Styling */
 .grid {
     display: grid;
-    grid-template-columns: repeat(3, 180px); /* Increased cell size */
-    grid-template-rows: repeat(3, 180px); /* Increased cell size */
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
     gap: 10px;
     margin: 20px 0;
+    width: 100%;
+    max-width: 600px;
 }
 
+/* Cell Styling */
 .cell {
+    position: relative;
     padding: 10px;
     text-align: center;
     border: 2px solid #ddd;
@@ -50,143 +166,233 @@ h1 {
     align-items: center;
     justify-content: center;
     font-size: 1.2em;
-    height: 180px;
-    width: 180px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-radius: 8px;
+    min-height: 100px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 15px;
     cursor: pointer;
     font-weight: 500;
-    color: #333;
+    color: var(--text-color);
+    overflow: hidden;
 }
 
-/* Hover effect for grid cells */
+/* Hover Effects for Cells */
+.cell::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent);
+    transform: rotate(45deg);
+    transition: opacity 0.5s;
+    opacity: 0;
+}
+
+.cell:hover::before {
+    opacity: 1;
+}
+
 .cell:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
+/* Header Cells (Top Shows and Left Shows) */
 .header-cell {
-    background-color: #4a90e2;
+    background-color: var(--primary-color);
     color: #ffffff;
     font-weight: bold;
     cursor: default;
     border: none;
-    border-radius: 8px;
+    border-radius: 15px;
     font-size: 1.2em;
 }
 
-/* Darker colors for correct and incorrect cells */
+/* Correct Answer Cell Styling */
 .correct {
-    background-color: #228b22; /* Darker green for correct answers */
+    background-color: var(--correct-color);
     color: #ffffff;
-    border-color: #1c6b1c;
+    border-color: #218838;
     font-weight: bold;
+    animation: correctAnimation 0.5s ease-in-out;
 }
 
+/* Incorrect Answer Cell Styling */
 .incorrect {
-    background-color: #b22222; /* Darker red for incorrect answers */
+    background-color: var(--incorrect-color);
     color: #ffffff;
-    border-color: #8b1a1a;
+    border-color: #c82333;
     font-weight: bold;
+    animation: incorrectAnimation 0.5s ease-in-out;
 }
 
-/* Input field styling */
+/* Animations for Correct and Incorrect Answers */
+@keyframes correctAnimation {
+    from {
+        transform: scale(0.9);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes incorrectAnimation {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    50% {
+        transform: translateX(5px);
+    }
+    75% {
+        transform: translateX(-5px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Input Field Styling */
 .actor-input {
     width: 80%;
-    padding: 8px;
+    padding: 10px;
     font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
     text-align: center;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .actor-input:focus {
-    border-color: #4a90e2;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.2);
 }
 
-/* Suggestion box styling */
+/* Suggestion Box Styling */
 #suggestions {
     position: absolute;
     background-color: #ffffff;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    z-index: 100;
-    max-height: 150px;
+    border-radius: 8px;
+    z-index: 1000;
+    max-height: 200px;
     overflow-y: auto;
-    width: 180px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    display: none; /* Hidden by default */
+    width: 200px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    display: none;
+    margin-top: 5px;
+    overflow-x: hidden;
 }
 
+/* Suggestion Item Styling */
 .suggestion-item {
     padding: 10px;
     font-size: 1em;
-    color: #333;
+    color: var(--text-color);
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .suggestion-item:hover {
-    background-color: #f0f2f5;
+    background-color: var(--secondary-color);
 }
 
-/* Button styling */
-button {
-    padding: 10px 20px;
-    font-size: 1.1em;
-    color: #ffffff;
-    background-color: #4a90e2;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s;
-    font-weight: bold;
-}
-
-button:hover {
-    background-color: #357abd;
-    transform: translateY(-2px);
-}
-
-button:active {
-    transform: translateY(1px);
-}
-
-/* Perfect grid container */
+/* Perfect Grid Container */
 #perfect-grid-container {
-    display: none; /* Hidden by default, shows up only with cheat code */
+    display: none;
     padding: 20px;
-    border: 2px dashed #4a90e2;
+    border: 2px dashed var(--primary-color);
     border-radius: 10px;
-    background-color: #eef4fc;
+    background-color: var(--secondary-color);
+    margin-top: 20px;
 }
 
 #perfect-grid-container h2 {
     font-size: 1.5em;
-    color: #4a90e2;
+    color: var(--primary-color);
     margin-bottom: 10px;
 }
 
-/* Title styling */
-.title {
-    font-size: 2em;
-    margin: 20px 0;
-    color: #4a90e2;
+/* Timer Styling */
+#timer {
+    margin-top: 20px;
+    font-size: 1.5em;
     font-weight: bold;
+    color: var(--text-color);
+    text-align: center; /* Center the timer */
 }
 
-/* Subtle animation for correct answers */
-@keyframes correctAnimation {
+/* Victory Overlay Styling */
+#victory-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+#victory-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 90%;
+    color: var(--text-color);
+    font-size: 1.5em;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    animation: popIn 0.5s ease-in-out;
+}
+
+#victory-content h2 {
+    font-size: 2em;
+    color: var(--correct-color);
+    margin-bottom: 20px;
+}
+
+#victory-content p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+/* Play Again Button Styling */
+#play-again-button {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    color: #ffffff;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s;
+}
+
+#play-again-button:hover {
+    background-color: var(--primary-dark);
+    transform: scale(1.05);
+}
+
+#play-again-button:active {
+    transform: scale(0.95);
+}
+
+/* Pop-in Animation for Victory Overlay */
+@keyframes popIn {
     from {
-        background-color: #fff;
+        opacity: 0;
+        transform: scale(0.6);
     }
     to {
-        background-color: #228b22; /* Match correct background color */
+        opacity: 1;
+        transform: scale(1);
     }
-}
-
-.correct {
-    animation: correctAnimation 0.5s ease-in-out;
 }
