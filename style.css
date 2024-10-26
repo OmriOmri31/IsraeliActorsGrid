@@ -1,80 +1,190 @@
-/* style.css */
+/* Reset some basic styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    min-height: 100vh;
     padding: 20px;
+}
+
+h1 {
+    font-size: 2em;
+    color: #4a90e2;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 700;
+}
+
+#game-container,
+#perfect-grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .grid {
     display: grid;
-    grid-template-columns: 150px 150px 150px; /* 3 columns */
-    grid-template-rows: 150px 150px 150px; /* 3 rows */
+    grid-template-columns: repeat(3, 180px); /* Increased cell size */
+    grid-template-rows: repeat(3, 180px); /* Increased cell size */
     gap: 10px;
-    margin-bottom: 20px;
+    margin: 20px 0;
 }
 
 .cell {
     padding: 10px;
     text-align: center;
-    border: 1px solid #ccc;
+    border: 2px solid #ddd;
     background-color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 1.2em;
+    height: 180px;
+    width: 180px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
-    height: 150px;
-    width: 150px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Hover effect for grid cells */
+.cell:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .header-cell {
-    background-color: #dfe6e9;
+    background-color: #4a90e2;
+    color: #ffffff;
     font-weight: bold;
     cursor: default;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
 }
 
+/* Different colors for correct and incorrect cells */
 .correct {
     background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
 }
 
 .incorrect {
     background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
 }
 
-.empty-cell {
-    background-color: transparent;
-    border: none;
-    cursor: default;
-}
-
+/* Input field styling */
 .actor-input {
-    width: 90%;
-    padding: 5px;
-    font-size: 16px;
+    width: 80%;
+    padding: 8px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
     text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
 }
 
+.actor-input:focus {
+    border-color: #4a90e2;
+}
+
+/* Suggestion box styling */
 #suggestions {
     position: absolute;
     background-color: #ffffff;
     border: 1px solid #ccc;
+    border-radius: 4px;
     z-index: 100;
     max-height: 150px;
     overflow-y: auto;
-    width: 200px;
-    display: none; /* Hide by default */
+    width: 180px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    display: none; /* Hidden by default */
 }
 
-
 .suggestion-item {
-    padding: 5px;
+    padding: 10px;
+    font-size: 1em;
+    color: #333;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .suggestion-item:hover {
-    background-color: #f1f1f1;
+    background-color: #f0f2f5;
+}
+
+/* Button styling */
+button {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    color: #ffffff;
+    background-color: #4a90e2;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #357abd;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* Perfect grid container */
+#perfect-grid-container {
+    display: none; /* Hidden by default, shows up only with cheat code */
+    padding: 20px;
+    border: 2px dashed #4a90e2;
+    border-radius: 10px;
+    background-color: #eef4fc;
+}
+
+#perfect-grid-container h2 {
+    font-size: 1.5em;
+    color: #4a90e2;
+    margin-bottom: 10px;
+}
+
+/* Title styling */
+.title {
+    font-size: 2em;
+    margin: 20px 0;
+    color: #4a90e2;
+    font-weight: bold;
+}
+
+/* Subtle animation for correct answers */
+@keyframes correctAnimation {
+    from {
+        background-color: #fff;
+    }
+    to {
+        background-color: #d4edda;
+    }
+}
+
+.correct {
+    animation: correctAnimation 0.5s ease-in-out;
 }
