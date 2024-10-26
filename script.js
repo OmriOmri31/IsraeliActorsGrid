@@ -179,22 +179,25 @@ function showSuggestions(input) {
 function submitAnswer(input, cell) {
     const answer = input.value.trim();
     const topShow = cell.dataset.top;
-    const rightShow = cell.dataset.left;
-    const key = `${topShow}-${rightShow}`;
+    const leftShow = cell.dataset.left;
+    const key = `${topShow}-${leftShow}`;
     const validActors = intersections[key];
+
+    // Clear the suggestions box after a guess
+    document.getElementById('suggestions').style.display = 'none';
 
     if (validActors.includes(answer)) {
         cell.classList.remove('incorrect');
         cell.classList.add('correct');
-        cell.textContent = answer;
+        cell.textContent = answer; // Display only the answer in bold
         solvedCells++;
         checkGameCompletion();
     } else {
         cell.classList.add('incorrect');
         cell.classList.remove('correct');
+        cell.textContent = answer; // Display only the answer in bold
     }
 }
-
 function checkGameCompletion() {
     if (solvedCells === 4) { // 2x2 grid means 4 correct answers
         alert('Congratulations! You have completed the game!');
